@@ -1,11 +1,14 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import StackNavigator from './src/navigations/index';
 
-const App = () => {
-  return <StackNavigator />;
+const Test = () => {
+  return (
+    <View>
+      <Text>ddd</Text>
+    </View>
+  );
 };
 
-export default App;
+export default Test;
 
 const styles = StyleSheet.create({});

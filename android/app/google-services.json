@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "767520445566-3qj3buamtq360715lt6cbnticprenqhl.apps.googleusercontent.com",
+          "client_id": "767520445566-sleo0gs27ff9la8rmm95gkv7j6rm6j5l.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.todofb",
-            "certificate_hash": "46b33e4c4572ee84e7259a83a029de9b46b2f75c"
+            "certificate_hash": "95532cb9da345f866f112ff7537dcbdcc2e88d32"
           }
         },
         {

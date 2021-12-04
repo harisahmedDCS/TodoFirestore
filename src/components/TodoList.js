@@ -49,10 +49,16 @@ const TodoList = ({
   }, [check, condition]);
 
   const onDelete = index => {
-    const res = todo.filter(arr => {
-      return index !== arr.id;
-    });
-    setTodo(res);
+    // const res = todo.filter(arr => {
+    //   return index !== arr.id;
+    // });
+    // setTodo(res);
+
+    setTodo(prevTodo =>
+      prevTodo.filter(arr => {
+        return index !== arr.id;
+      }),
+    );
     setCheck(true);
     console.log('updated', todo);
   };
