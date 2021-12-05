@@ -6,6 +6,7 @@ import {
   Dimensions,
   TouchableOpacity,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -19,19 +20,24 @@ const TodoList = ({
   check,
   setCheck,
   text,
+  docName,
 }) => {
   // const [firestoreTodo, setFireStoreTodo] = useState([]);
   // const [firestoreTodo2, setFireStoreTodo2] = useState([]);
   const [condition, setCondition] = useState(false);
+  const [loader, setLoader] = useState(false);
   useEffect(() => {
     setCheck(check);
-    console.log('ans', todo);
+    console.log('ans', docName);
 
     const user = async () => {
+      setLoader(true);
       await firestore()
         .collection('Users')
+        .doc(docName)
         .get()
-        .then(val => setTodo(val.docs[0]._data.todo));
+        .then(val => setTodo(val._data.todo));
+      setLoader(false);
     };
     user();
     if (condition == true) {
@@ -84,38 +90,42 @@ const TodoList = ({
 
   return (
     <ScrollView style={styles.container}>
-      {todo == undefined
-        ? null
-        : todo.map((item, key) => {
-            return (
-              <View key={item.id} style={styles.list}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    margin: 12,
-                  }}>
-                  <View style={{flex: 8}}>
-                    <Text style={styles.txt}>{item.name}</Text>
-                  </View>
-                  <TouchableOpacity
-                    style={{flex: 1}}
-                    onPress={() => onEdit(item.name, item.id)}>
-                    <Entypo name="edit" color="#fff" size={20} />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    onPress={() => onDelete(item.id)}>
-                    <MaterialCommunityIcons
-                      name="delete"
-                      color="#fff"
-                      size={20}
-                    />
-                  </TouchableOpacity>
+      {(loader == true) | (todo == undefined) ? (
+        <View style={[styles.horizontal]}>
+          <ActivityIndicator size="large" color="orange" />
+        </View>
+      ) : (
+        todo.map((item, key) => {
+          return (
+            <View key={item.id} style={styles.list}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  margin: 12,
+                }}>
+                <View style={{flex: 8}}>
+                  <Text style={styles.txt}>{item.name}</Text>
                 </View>
+                <TouchableOpacity
+                  style={{flex: 1}}
+                  onPress={() => onEdit(item.name, item.id)}>
+                  <Entypo name="edit" color="#fff" size={20} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => onDelete(item.id)}>
+                  <MaterialCommunityIcons
+                    name="delete"
+                    color="#fff"
+                    size={20}
+                  />
+                </TouchableOpacity>
               </View>
-            );
-          })}
+            </View>
+          );
+        })
+      )}
     </ScrollView>
   );
 };
@@ -134,4 +144,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   txt: {},
+  horizontal: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    padding: 10,
+  },
 });

@@ -5,7 +5,6 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Todo from '../screens/Todo';
 import SignIn from '../screens/SignIn';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Test from '../screens/Test';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 const Stack = createNativeStackNavigator();
 const index = () => {
@@ -20,7 +19,13 @@ const index = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="SignIn">
-        <Stack.Screen name="SignIn" component={SignIn} />
+        <Stack.Screen
+          name="SignIn"
+          component={SignIn}
+          options={{
+            headerShown: false,
+          }}
+        />
         <Stack.Screen
           name="Todo"
           component={Todo}
@@ -32,7 +37,6 @@ const index = () => {
             ),
           })}
         />
-        <Stack.Screen name="Test" component={Test} />
       </Stack.Navigator>
     </NavigationContainer>
   );

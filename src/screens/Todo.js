@@ -11,20 +11,42 @@ import TodoList from '../components/TodoList';
 import firestore from '@react-native-firebase/firestore';
 import {NavigationContainer} from '@react-navigation/native';
 import {dispatch, useSelector} from 'react-redux';
+
 const SWidth = Dimensions.get('window').width;
 const Todo = ({navigation}) => {
+  const selector = useSelector(state => state.user.userInfo);
+  const usersRef = firestore()
+    .collection('Users')
+    .doc(`${selector.profile.email}`);
   const [check, setCheck] = useState(false);
   const [text, setText] = useState('');
   const [todo, setTodo] = useState([]);
   const [data, setData] = useState('');
-  const selector = useSelector(state => state.user);
   console.log('selector', selector);
   useEffect(() => {
     setCheck(check);
+    usersRef.get().then(docSnapshot => {
+      if (docSnapshot.exists) {
+        usersRef.onSnapshot(doc => {
+          console.log(doc);
+        });
+      } else if (check == true) {
+        firestore()
+          .collection('Users')
+          .doc(`${selector.profile.email}`)
+          .set({
+            todo,
+          })
+          .then(() => {
+            console.log('User added!');
+          });
+        setCheck(!check);
+      }
+    });
     if (check == true) {
       firestore()
         .collection('Users')
-        .doc('todoList')
+        .doc(`${selector.profile.email}`)
         .set({
           todo,
         })
@@ -73,10 +95,11 @@ const Todo = ({navigation}) => {
       <View style={{marginTop: 20}}>
         <TouchableOpacity>
           <Text style={{fontWeight: 'bold', fontSize: 30}}>
-            {selector.userInfo}
+            {selector.profile.name}
           </Text>
         </TouchableOpacity>
       </View>
+
       <TextInput style={styles.input} onChangeText={setText} value={text} />
       <View style={{alignItems: 'center'}}>
         <TouchableOpacity
@@ -88,13 +111,14 @@ const Todo = ({navigation}) => {
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.btn, {backgroundColor: 'tomato', marginTop: 10}]}
+          style={[styles.btn, {marginTop: 10}]}
           activeOpacity={0.8}
           onPress={() => EditTodo(data)}>
           <Text style={{fontWeight: 'bold', fontSize: 15, color: '#fff'}}>
             Edit
           </Text>
         </TouchableOpacity>
+
         <TodoList
           todo={todo}
           setTodo={setTodo}
@@ -103,6 +127,7 @@ const Todo = ({navigation}) => {
           stateLift={stateLift}
           check={check}
           setCheck={setCheck}
+          docName={selector.profile.email}
         />
       </View>
     </View>
@@ -133,5 +158,12 @@ const styles = StyleSheet.create({
     height: 40,
     backgroundColor: '#E8740E',
     borderRadius: 8,
+    backgroundColor: 'tomato',
+  },
+
+  horizontal: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    padding: 10,
   },
 });
