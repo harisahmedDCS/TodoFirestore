@@ -37,6 +37,7 @@ npm-debug.log
 yarn-error.log
 .env
 android/app/google-services.json
+android/app/debug.keystore
 # BUCK
 buck-out/
 \.buckd/
